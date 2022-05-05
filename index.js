@@ -19,8 +19,9 @@ async function run() {
     await client.connect();
     console.log('db connect')
 
-    const productCollection =client.db('vivoPhone').collection('Product');
-    const productCollection2 =client.db('vivoPhone').collection('Product2');
+    const productCollection = client.db('vivoPhone').collection('Product');
+    const productCollection2 = client.db('vivoPhone').collection('Product2');
+    
 
     app.get('/product', async (req, res)=>{
    const query = {};
@@ -35,6 +36,15 @@ async function run() {
     const Product = await cursor.toArray();
     res.send(Product)
 
+    })
+    app.post('/addItems', async (req, res)=>{
+      const product = req.body;
+
+      if(!product.name || !product.price){
+        return res.send({success: false, error: "please provide all information"});
+      }
+      const result = await productCollection.insertOne(product); 
+      res.send({success: true, messgea: 'Successfully insertednp'})     
     })
 
   } finally {
