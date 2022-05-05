@@ -20,11 +20,18 @@ async function run() {
     console.log('db connect')
 
     const productCollection =client.db('vivoPhone').collection('Product');
+    const productCollection2 =client.db('vivoPhone').collection('Product2');
 
     app.get('/product', async (req, res)=>{
-
    const query = {};
     const cursor = productCollection.find(query);
+    const Product = await cursor.toArray();
+    res.send(Product)
+
+    })
+    app.get('/product2', async (req, res)=>{
+   const query = {};
+    const cursor = productCollection2.find(query);
     const Product = await cursor.toArray();
     res.send(Product)
 
