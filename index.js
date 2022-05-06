@@ -47,6 +47,15 @@ async function run() {
       res.send({success: true, messgea: 'Successfully insertednp'})     
     })
 
+
+    //Delete
+    app.delete('/product/:id', async(req, res)=>{
+      const id = req.params.id;
+      const query = {_id: Objectid(_id)};
+      const result = await productCollection.deleteOne(query);
+      res.send(result);
+    })
+
   } finally {
     
   }
