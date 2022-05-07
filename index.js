@@ -38,16 +38,21 @@ async function run() {
     res.send(Product)
 
     })
-    app.post('/addItems', async (req, res)=>{
-      const product = req.body;
-          console.log(product)
-      if(!product.name || !product.price || !product.quantity || !product.supplier || product.sold || !product.description ||!product.image){
-        return res.send({success: false, error: "please provide all information"});
-      }
-      const result = await productCollection.insertOne(product); 
-      res.send({success: true, messgea: 'Successfully insertednp'})     
-    })
+    // app.post('/addItems', async (req, res)=>{
+    //   const product = req.body;
+    //       console.log(product)
+    //   if(!product.name || !product.price || !product.quantity || !product.supplier || product.sold || !product.description ||!product.image){
+    //     return res.send({success: false, error: "please provide all information"});
+    //   }
+    //   const result = await productCollection.insertOne(product); 
+    //   res.send({success: true, messgea: 'Successfully insertednp'})     
+    // })
 
+    app.post("/product/",async (req, res)=>{
+      const newProduct = req.body;
+      const result = await productCollection.insertOne(newProduct);
+      res.send(result)
+    })
 
     //Delete
     app.delete('/product/:id', async(req, res)=>{
