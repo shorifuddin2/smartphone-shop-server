@@ -38,16 +38,35 @@ async function run() {
     res.send(Product)
 
     })
-    // app.post('/addItems', async (req, res)=>{
-    //   const product = req.body;
-    //       console.log(product)
-    //   if(!product.name || !product.price || !product.quantity || !product.supplier || product.sold || !product.description ||!product.image){
-    //     return res.send({success: false, error: "please provide all information"});
-    //   }
-    //   const result = await productCollection.insertOne(product); 
-    //   res.send({success: true, messgea: 'Successfully insertednp'})     
-    // })
+    //Update
+    app.get('/product/:id', async (req, res) => {
+      const id = req.params.id;
+      console.log(id)
+      const query = { _id: ObjectId(id) };
+      const product = await productCollection.findOne(query);
+      res.send(product);
+  });
+  app.put('/product/:id', async(req, res) =>{
+    const id = req.params.id;
+    const update = req.body;
+    const filter = {_id: ObjectId(id)};
+    const options = { upsert: true };
+    const updatedDoc = {
+        $set: {
+          SupplierName : update.SupplierName,
+          description:update.description,
+          quantity : update.quantity,
+          price : update.price,
+          picture : update.picture,
+          Brand : update.Brand
+        }
+    };
+    const result = await productCollection.updateOne(filter, updatedDoc, options);
+    res.send(result);
 
+})
+  
+// addItems
     app.post("/product/",async (req, res)=>{
       const newProduct = req.body;
       const result = await productCollection.insertOne(newProduct);
