@@ -22,6 +22,7 @@ async function run() {
 
     const productCollection = client.db('vivoPhone').collection('Product');
     const productCollection2 = client.db('vivoPhone').collection('Product2');
+    const productCollection3 = client.db('vivoPhone').collection('review');
     
 
     app.get('/product', async (req, res)=>{
@@ -38,6 +39,13 @@ async function run() {
     res.send(Product)
 
     })
+    app.get('/review', async (req, res)=>{
+   const query = {};
+    const cursor = productCollection3.find(query);
+    const Product = await cursor.toArray();
+    res.send(Product)
+
+    })
     //Update
     app.get('/product/:id', async (req, res) => {
       const id = req.params.id;
@@ -46,24 +54,17 @@ async function run() {
       const product = await productCollection.findOne(query);
       res.send(product);
   });
+  
+
   app.put('/product/:id', async(req, res) =>{
     const id = req.params.id;
-    const update = req.body;
-    const filter = {_id: ObjectId(id)};
-    const options = { upsert: true };
-    const updatedDoc = {
-        $set: {
-          SupplierName : update.SupplierName,
-          description:update.description,
-          quantity : update.quantity,
-          price : update.price,
-          picture : update.picture,
-          Brand : update.Brand
-        }
-    };
-    const result = await productCollection.updateOne(filter, updatedDoc, options);
-    res.send(result);
-
+    const qty = req.body.restock
+    console.log(qty)
+    const filter = {_id:ObjectId(id)};
+    const  product = await productCollection.findOne(filter)
+    const quantity = qty ?  parseInt(product.quantity  ) + parseInt(qty) : product.quantity - 1
+    const result = await productCollection.updateOne({ _id: ObjectId(id) }, { $set: { quantity: quantity } });
+    res.send(result)
 })
   
 // addItems
