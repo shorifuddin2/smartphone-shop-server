@@ -55,7 +55,7 @@ async function run() {
       res.send(product);
   });
   
-
+// Add
   app.put('/product/:id', async(req, res) =>{
     const id = req.params.id;
     const qty = req.body.restock
